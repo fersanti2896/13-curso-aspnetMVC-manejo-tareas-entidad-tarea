@@ -16,6 +16,8 @@ async function obtenerTareas() {
     });
 
     if (!resp.ok) {
+        manejarErrorAPI(resp);
+
         return;
     }
 
@@ -51,6 +53,6 @@ async function manejarFocusTarea(tarea) {
         const json = await resp.json();
         tarea.id(json.id);
     } else {
-        // Mostrando mensaje de error
+        manejarErrorAPI(resp);
     }
 }

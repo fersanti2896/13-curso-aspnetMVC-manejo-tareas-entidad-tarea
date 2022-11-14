@@ -47,7 +47,8 @@ builder.Services.AddLocalization(opc => {
     opc.ResourcesPath = "Resources";
 });
 
-builder.Services.AddTransient<IUsuarioRepository, UsuarioRepository>(); 
+builder.Services.AddTransient<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 

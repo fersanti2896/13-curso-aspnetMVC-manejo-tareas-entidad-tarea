@@ -1,4 +1,6 @@
-﻿using ManejoTareas.Entities;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using ManejoTareas.Entities;
 using ManejoTareas.Models;
 using ManejoTareas.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +11,14 @@ namespace ManejoTareas.Controllers {
     public class TareasController : ControllerBase {
         private readonly ApplicationDbContext context;
         private readonly IUsuarioRepository usuarioRepository;
+        private readonly IMapper mapper;
 
-        public TareasController(ApplicationDbContext context, IUsuarioRepository usuarioRepository) {
+        public TareasController(ApplicationDbContext context, 
+                                IUsuarioRepository usuarioRepository,
+                                IMapper mapper) {
             this.context = context;
             this.usuarioRepository = usuarioRepository;
+            this.mapper = mapper;
         }
 
         /* Listado de tareas */
@@ -21,10 +27,7 @@ namespace ManejoTareas.Controllers {
             var usuarioID = usuarioRepository.ObtenerUsuarioId();
             var tareas = await context.Tareas.Where(t => t.UsuarioId == usuarioID)
                                              .OrderBy(t => t.Orden)
-                                             .Select(t => new TareaDTO { 
-                                                Id = t.Id,
-                                                Titulo = t.Titulo
-                                             })
+                                             .ProjectTo<TareaDTO>(mapper.ConfigurationProvider)
                                              .ToListAsync();
 
             return tareas;
