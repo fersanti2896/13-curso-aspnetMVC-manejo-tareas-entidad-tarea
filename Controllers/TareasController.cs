@@ -1,4 +1,5 @@
 ﻿using ManejoTareas.Entities;
+using ManejoTareas.Models;
 using ManejoTareas.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +17,15 @@ namespace ManejoTareas.Controllers {
 
         /* Listado de tareas */
         [HttpGet]
-        public async Task<List<Tarea>> Get() {
-            var tareas = await context.Tareas.ToListAsync();
+        public async Task<List<TareaDTO>> Get() {
+            var usuarioID = usuarioRepository.ObtenerUsuarioId();
+            var tareas = await context.Tareas.Where(t => t.UsuarioId == usuarioID)
+                                             .OrderBy(t => t.Orden)
+                                             .Select(t => new TareaDTO { 
+                                                Id = t.Id,
+                                                Titulo = t.Titulo
+                                             })
+                                             .ToListAsync();
 
             return tareas;
         }
