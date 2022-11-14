@@ -47,6 +47,8 @@ builder.Services.AddLocalization(opc => {
     opc.ResourcesPath = "Resources";
 });
 
+builder.Services.AddTransient<IUsuarioRepository, UsuarioRepository>(); 
+
 var app = builder.Build();
 
 app.UseRequestLocalization(opc => {
