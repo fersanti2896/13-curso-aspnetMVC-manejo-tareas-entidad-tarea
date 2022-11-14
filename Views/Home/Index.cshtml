@@ -1,1 +1,56 @@
-﻿
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer localizer 
+
+@{
+    ViewData["Title"] = "Listado de Tareas";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@localizer["Mis tareas"]</h1>
+</div>
+
+<div id="contenedor-listado" class="text-center">
+    <div class="text-start" data-bind="foreach: tareas">
+        <div name="tarea" class="border mb-2 p-2" style="cursor: pointer">
+            <div data-bind="text: titulo" class="fw-bold">
+
+            </div>
+        </div>
+    </div>
+
+    <div data-bind="visible: cargando" class="spinner-border">
+        <span class="visually-hidden">Cargando...</span>
+    </div>
+
+    <div data-bind="visible: noTareas">
+        ¡No existen tareas para mostrar!
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function tareaListado() {
+            var self = this;
+
+            self.tareas = ko.observableArray([]);
+            self.cargando = ko.observable(true);
+
+            self.noTareas = ko.pureComputed(function() {
+                if (self.cargando()) {
+                    return false;    
+                }
+
+                return self.tareas().length === 0;
+            });
+        } 
+
+        const tareaListadoViewModel = new tareaListado();
+
+        setTimeout(() => {
+            //tareaListadoViewModel.tareas.push({ titulo: 'Tarea 1' });
+            tareaListadoViewModel.cargando(false);
+        }, 1000)
+
+        ko.applyBindings(tareaListadoViewModel, document.getElementById('contenedor-listado'));
+    </script>
+}
