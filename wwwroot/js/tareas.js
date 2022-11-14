@@ -5,6 +5,30 @@ function agregarTarea() {
     $("[name=titulo-tarea]").last().focus();
 }
 
+async function obtenerTareas() {
+    tareaListadoViewModel.cargando(true);
+
+    const resp = await fetch(urlTarea, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!resp.ok) {
+        return;
+    }
+
+    const json = await resp.json();
+    tareaListadoViewModel.tareas([]);
+
+    json.forEach(valor => {
+        tareaListadoViewModel.tareas.push(new tareaElementoListado(valor));
+    });
+
+    tareaListadoViewModel.cargando(false);
+}
+
 async function manejarFocusTarea(tarea) {
     const titulo = tarea.titulo();
 

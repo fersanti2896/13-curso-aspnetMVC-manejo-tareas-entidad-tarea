@@ -14,6 +14,15 @@ namespace ManejoTareas.Controllers {
             this.usuarioRepository = usuarioRepository;
         }
 
+        /* Listado de tareas */
+        [HttpGet]
+        public async Task<List<Tarea>> Get() {
+            var tareas = await context.Tareas.ToListAsync();
+
+            return tareas;
+        }
+
+        /* Creación de tarea */
         [HttpPost]
         public async Task<ActionResult<Tarea>> Post([FromBody] string titulo) {
             var usuarioID = usuarioRepository.ObtenerUsuarioId();
