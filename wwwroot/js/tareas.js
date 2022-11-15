@@ -109,11 +109,12 @@ async function manejarTarea(tarea) {
     }
 
     const json = await resp.json();
-    console.log(json);
-
+   
     editarTareaViewModel.id = json.id;
     editarTareaViewModel.titulo(json.titulo);
     editarTareaViewModel.descripcion(json.descripcion);
+
+    modalEditarTarea.show();
 }
 
 $(function () {

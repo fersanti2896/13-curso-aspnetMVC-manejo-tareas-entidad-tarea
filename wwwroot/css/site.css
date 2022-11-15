@@ -16,3 +16,7 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+[name=tarea]:hover {
+    background-color: lightgray;
+}
