@@ -154,6 +154,40 @@ async function editarTarea(tarea) {
     }
 }
 
+function obtenerIndiceTarea() {
+    return tareaListadoViewModel.tareas().findIndex(t => t.id() == editarTareaViewModel.id);
+}
+
+async function borrarTarea(tarea) {
+    const idTarea = tarea.id;
+
+    const resp = await fetch(`${urlTarea}/${idTarea}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (resp.ok) {
+        const indice = obtenerIndiceTarea();
+        tareaListadoViewModel.tareas.splice(indice, 1);
+    }
+}
+
+function intBorrarTarea(tarea) {
+    modalEditarTarea.hide();
+
+    confirmarAccion({
+        callBackAceptar: () => {
+            borrarTarea(tarea);
+        },
+        callBackCancelar: () => {
+            modalEditarTarea.show();
+        },
+        titulo: `¿Desea borrar la tarea - ${ tarea.titulo() }?`
+    })
+}
+
 $(function () {
     $("#reordenable").sortable({
         axis: 'y',

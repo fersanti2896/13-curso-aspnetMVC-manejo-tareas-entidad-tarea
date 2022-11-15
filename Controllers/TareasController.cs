@@ -112,5 +112,20 @@ namespace ManejoTareas.Controllers {
 
             return Ok();
         }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id) {
+            var usuarioID = usuarioRepository.ObtenerUsuarioId();
+            var tarea = await context.Tareas.FirstOrDefaultAsync(t => t.Id == id && t.UsuarioId == usuarioID);
+
+            if (tarea is null) {
+                return NotFound();
+            }
+
+            context.Remove(tarea);
+            await context.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }
