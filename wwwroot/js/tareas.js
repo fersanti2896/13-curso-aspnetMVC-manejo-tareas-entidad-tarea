@@ -117,6 +117,43 @@ async function manejarTarea(tarea) {
     modalEditarTarea.show();
 }
 
+async function cambioEditarTarea() {
+    const obj = {
+        id: editarTareaViewModel.id,
+        titulo: editarTareaViewModel.titulo(),
+        descripcion: editarTareaViewModel.descripcion()
+    };
+
+    if (!obj.titulo) {
+        return;
+    }
+
+    await editarTarea(obj);
+
+    const indice = tareaListadoViewModel.tareas().findIndex(t => t.id() === obj.id);
+    const tarea = tareaListadoViewModel.tareas()[indice];
+
+    tarea.titulo(obj.titulo);
+}
+
+/* Envia la data para editar al controlador */
+async function editarTarea(tarea) {
+    const data = JSON.stringify(tarea);
+
+    const resp = await fetch(`${urlTarea}/${tarea.id}`, {
+        method: 'PUT',
+        body: data,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!resp.ok) {
+        manejarErrorAPI(resp);
+        throw "error";
+    }
+}
+
 $(function () {
     $("#reordenable").sortable({
         axis: 'y',

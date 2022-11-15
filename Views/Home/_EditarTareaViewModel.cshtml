@@ -23,7 +23,7 @@
                                    class="form-control"
                                    id="txtTituloCrearTarea"
                                    placeholder="Titulo"
-                                   data-bind="value: titulo" />
+                                   data-bind="value: titulo, event: { change: cambioEditarTarea }" />
                             <label for="txtTituloCrearTarea">Titulo de la Tarea</label>
                         </div>
                         <div class="mb-3">
@@ -31,7 +31,7 @@
                             <textarea type="text" 
                                       class="form-control" 
                                       rows="4" 
-                                      data-bind="value: descripcion">
+                                      data-bind="value: descripcion, event: { change: cambioEditarTarea }">
                             </textarea>
                         </div>
                     </div>
