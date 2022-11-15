@@ -91,6 +91,31 @@ async function actualizarOrdenTareas() {
     tareaListadoViewModel.tareas(arregloOrden);
 }
 
+async function manejarTarea(tarea) {
+    if (tarea.esNuevo()) {
+        return;
+    }
+
+    const resp = await fetch(`${urlTarea}/${tarea.id()}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!resp.ok) {
+        manejarErrorAPI(resp);
+        return;
+    }
+
+    const json = await resp.json();
+    console.log(json);
+
+    editarTareaViewModel.id = json.id;
+    editarTareaViewModel.titulo(json.titulo);
+    editarTareaViewModel.descripcion(json.descripcion);
+}
+
 $(function () {
     $("#reordenable").sortable({
         axis: 'y',

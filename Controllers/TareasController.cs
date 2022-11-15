@@ -33,6 +33,19 @@ namespace ManejoTareas.Controllers {
             return tareas;
         }
 
+        /* Obtener una tarea para editar */
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Tarea>> Get(int id) {
+            var usuarioID = usuarioRepository.ObtenerUsuarioId();
+            var tarea = await context.Tareas.FirstOrDefaultAsync(t => t.Id == id && t.UsuarioId == usuarioID);
+
+            if (tarea is null) {
+                return NotFound();
+            }
+
+            return tarea;
+        }
+
         /* Creación de tarea */
         [HttpPost]
         public async Task<ActionResult<Tarea>> Post([FromBody] string titulo) {

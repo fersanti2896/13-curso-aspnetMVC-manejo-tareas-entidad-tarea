@@ -17,7 +17,10 @@
 
 <div id="contenedor-listado" class="text-center">
     <div id="reordenable" class="text-start" data-bind="foreach: tareas">
-        <div name="tarea" class="border mb-2 p-2" style="cursor: pointer">
+        <div name="tarea" 
+             class="border mb-2 p-2" 
+             style="cursor: pointer"
+             data-bind="click: manejarTarea">
             <div data-bind="text: titulo, hidden: esNuevo" class="fw-bold">
 
             </div>
@@ -72,6 +75,12 @@
                 return self.id() == 0;
             });
         }
+
+        const editarTareaViewModel = {
+            id: 0,
+            titulo: ko.observable(''),
+            descripcion: ko.observable('')
+        };
 
         const tareaListadoViewModel = new tareaListado();
 
