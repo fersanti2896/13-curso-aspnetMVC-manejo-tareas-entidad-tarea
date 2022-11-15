@@ -58,5 +58,29 @@ namespace ManejoTareas.Controllers {
 
             return tarea;
         }
+
+        [HttpPost("ordenar")]
+        public async Task<IActionResult> Ordenar([FromBody] int[] ids) {
+            var usuarioID = usuarioRepository.ObtenerUsuarioId();
+            var tareas = await context.Tareas.Where(t => t.UsuarioId == usuarioID)
+                                             .ToListAsync();
+            var tareaID = tareas.Select(t => t.Id);
+            var tareaIDNoUsuario = ids.Except(tareaID).ToList();
+
+            if (tareaIDNoUsuario.Any()) {
+                return Forbid();
+            }
+
+            var tareaDic = tareas.ToDictionary(x => x.Id);
+
+            for (int i = 0; i < ids.Length; i++) {
+                var id = ids[i];
+                var tarea = tareaDic[id];
+                tarea.Orden = i + 1;
+            }   
+
+            await context.SaveChangesAsync();
+            return Ok();
+        }
     }
 }

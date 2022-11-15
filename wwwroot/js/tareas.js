@@ -56,3 +56,46 @@ async function manejarFocusTarea(tarea) {
         manejarErrorAPI(resp);
     }
 }
+
+async function obtenerIDsTareas() {
+    const ids = $("[name=titulo-tarea]").map(function () {
+        return $(this).attr("data-id");
+    }).get();
+
+    return ids;
+}
+
+/* Enviando las tareas al backend */
+async function enviarTareas(ids) {
+    var data = JSON.stringify(ids);
+
+    await fetch(`${urlTarea}/ordenar`, {
+        method: 'POST',
+        body: data,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+}
+
+async function actualizarOrdenTareas() {
+    const ids = obtenerIDsTareas();
+    await enviarTareas(ids);
+
+    /* Ordenando las tareas en memoria */
+    const arregloOrden = tareaListadoViewModel.tareas.sorted(function (a, b) {
+        return ids.indexOf(a.id().toString()) - ids.indexOf(b.id().toString());
+    });
+
+    tareaListadoViewModel.tareas([]);
+    tareaListadoViewModel.tareas(arregloOrden);
+}
+
+$(function () {
+    $("#reordenable").sortable({
+        axis: 'y',
+        stop: async function () {
+            await actualizarOrdenTareas();
+        }
+    })
+})
